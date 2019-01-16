@@ -18,7 +18,7 @@
         <delete dir="${build.out}" />
     </target>
 
-    <target name="compile.main">
+    <target name="compile.main" depends="clean">
         <mkdir dir="${build.classes}" />
         <javac srcdir="${src.main}"
             destdir="${build.classes}"
@@ -26,7 +26,7 @@
             classpathref="classpath.main" />
     </target>
 
-    <target name="compile.tests">
+    <target name="compile.tests" depends="clean">
         <mkdir dir="${reports.tests}" />
         <mkdir dir="${build.test.classes}" />
         <javac srcdir="${src.test}" destdir="${build.test.classes}" includeantruntime="false">
@@ -35,7 +35,7 @@
         </javac>
     </target>
 
-    <target name="compile" depends="clean,compile.main,compile.tests">
+    <target name="compile" depends="compile.main,compile.tests">
         <echo>Done Compiling ${ant.project.name}</echo>
     </target>
 
