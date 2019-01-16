@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Helloworld Ant Demo" basedir="." default="test">
+
+    <property file="build.properties" />
+
+    <path id="classpath.main">
+        <fileset dir="${lib.dir}" includes="*.jar" />
+    </path>
+
+    <path id="classpath.test">
+        <fileset dir="${lib.test.dir}" includes="*.jar" />
+        <pathelement location="${build.classes}" />
+        <pathelement location="${build.test.classes}" />
+    </path>
+
+    <target name="clean">
+        <delete dir="${build.out}" />
+    </target>
+
+    <target name="compile.main">
+        <mkdir dir="${build.classes}" />
+        <javac srcdir="${src.main}"
+            destdir="${build.classes}"
+            includeantruntime="false"
+            classpathref="classpath.main" />
+    </target>
+
+    <target name="compile.tests">
+        <mkdir dir="${reports.tests}" />
+        <mkdir dir="${build.test.classes}" />
+        <javac srcdir="${src.test}" destdir="${build.test.classes}" includeantruntime="false">
+            <classpath refid="classpath.main" />
+            <classpath refid="classpath.test" />
+        </javac>
+    </target>
+
+    <target name="compile" depends="clean,compile.main,compile.tests">
+        <echo>Done Compiling ${ant.project.name}</echo>
+    </target>
+
+    <target name="build" depends="compile">
+        <echo>Done building ${ant.project.name}</echo>
+    </target>
+
+    <target name="test" depends="build">
+        <junit haltonerror="true" haltonfailure="true">
+            <!-- Log output to console -->
+            <formatter type="plain" usefile="false" />
+            <!-- Log output to files -->
+            <formatter type="plain" />
+            <classpath refid="classpath.main" />
+            <classpath refid="classpath.test" />
+            <batchtest todir="${reports.tests}">
+                <fileset dir="${src.test}" />
+            </batchtest>
+        </junit>
+    </target>
+    
+</project>
